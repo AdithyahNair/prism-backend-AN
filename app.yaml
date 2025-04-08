@@ -1,0 +1,48 @@
+runtime: python
+runtime_config:
+  operating_system: "ubuntu22"
+  runtime_version: "3.11.0"
+env: flex
+entrypoint: gunicorn -w 4 -k uvicorn.workers.UvicornWorker main:app
+handlers:
+  - url: /.*
+    script: auto
+instance_class: F4_1G
+resources:
+  cpu: 4
+  memory_gb: 8
+  disk_size_gb: 50
+automatic_scaling:
+  target_concurrent_requests: 10
+env_variables:
+  GCS_BUCKET_NAME: "chatbotstorages"
+  USE_GCS: "true"
+  DEV_MODE: "True"
+  DATABASE_URL: "sqlite:///./prism.db"
+  SUPABASE_URL: ${SUPABASE_URL}
+  SUPABASE_KEY: ${SUPABASE_KEY}
+  SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
+  LOG_LEVEL: "INFO"
+  BACKEND_CORS_ORIGINS: '["*"]'
+  UPLOAD_DIR: "uploads"
+  MAX_UPLOAD_SIZE: 10485760
+  SECRET_KEY: "your-secret-key-here"
+  ALGORITHM: "HS256"
+  ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+  API_V1_STR: "/api/v1"
+  PROJECT_NAME: "Prism Backend"
+  OPENAI_API_KEY: "your-openai-api-key"
+  ANTHROPIC_API_KEY: "your-anthropic-api-key"
+  GOOGLE_API_KEY: "your-google-api-key"
+  LOG_FORMAT: "json"
+  ENABLE_RED_TEAMING: "true"
+  ENABLE_BENCHMARKING: "true"
+  ENABLE_AUDIT: "true"
+
+  SUPPORTED_MODEL_TYPES: '["h5", "pkl", "pt", "pth", "onnx", "pb"]'
+
+  SUPPORTED_DATASET_TYPES: '["csv", "parquet", "json", "jsonl"]'
+  RATE_LIMIT_PER_MINUTE: 100
+  RATE_LIMIT_PER_MINUTE_ANONYMOUS: 10
+  ENABLE_METRICS: "true"
+  METRICS_PORT: 9090
